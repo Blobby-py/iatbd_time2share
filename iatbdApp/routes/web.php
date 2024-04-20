@@ -17,7 +17,16 @@ use App\Http\Controllers\ListingController;
 */
 
 Route::get('/', [ListingController::class, "index"]);
+
+// Show the create page
+Route::get('/listings/create', [ListingController::class, "create"]);
+
+// Store new listing data
+Route::post("/listings", [ListingController::class, "store"]);
+
+// Show single listing
 Route::get('/listings/{listing}', [ListingController::class, "show"]);
+
 
 // Route::get("/listings/{listing})", function(Listing $listing) {
 //     return view("listing", [
