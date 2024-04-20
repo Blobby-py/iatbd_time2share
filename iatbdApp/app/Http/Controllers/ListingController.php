@@ -32,7 +32,8 @@ class ListingController extends Controller
     }
 
     // Store product data
-    public function store(Request $request) {
+    public function store(Request $request, Listing $listing) {
+
         $formField = $request->validate([
             "title" => "required",  // Title of product
             "product" => "required",  // Name of product
@@ -46,9 +47,11 @@ class ListingController extends Controller
             $formField['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
+        $formField["user_id"] = auth()->id();
+
         Listing::create($formField);
 
-        return redirect("/")->with("message", "Product Upload Succesfull");
+        return back()->with('message', 'Product Upload Succesfull!');
     }
 
     // ShowEdit Form
@@ -67,11 +70,11 @@ class ListingController extends Controller
             "description" => "required"  // Description of product
         ]);
 
+        $listing->update($formField);
+
         if($request->hasFile('logo')) {
             $formField['logo'] = $request->file('logo')->store('logos', 'public');
         }
-
-        $listing->update($formField);
 
         return back()->with("message", "Product Edited Succesfully");
     }
