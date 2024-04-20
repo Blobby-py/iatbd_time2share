@@ -50,4 +50,35 @@ class ListingController extends Controller
 
         return redirect("/")->with("message", "Product Upload Succesfull");
     }
+
+    // ShowEdit Form
+    public function edit(Listing $listing) {
+        return view("listings.edit", ["listing" => $listing]);
+    }
+
+    // Update product data
+    public function update(Request $request, Listing $listing) {
+        $formField = $request->validate([
+            "title" => "required",  // Title of product
+            "product" => "required",  // Name of product
+            "location" => "required",  // Location of product
+            "email" => ["required", "email"],  // Email of seller
+            "tags" => "required",  // ["required", Rule::unique("listings", "tags")],  // Product tags
+            "description" => "required"  // Description of product
+        ]);
+
+        if($request->hasFile('logo')) {
+            $formField['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        $listing->update($formField);
+
+        return back()->with("message", "Product Edited Succesfully");
+    }
+
+    // Destrouy product
+    public function destroy(Listing $listing) {
+        $listing->delete();
+        return redirect("/")->with("message", "Product succesfully deleted");
+    }
 }
